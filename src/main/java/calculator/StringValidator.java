@@ -18,12 +18,25 @@ public class StringValidator {
             numbersString = extractor.extractStringNumbers(input);
         }
 
+        if (isSingleNumber(numbersString, delimiter)) {
+            long number = parsePositiveInteger(numbersString.trim());
+            return "결과 : " + number;
+        }
+
         long sum = calculator.calculateSum(numbersString, delimiter, this);
         return "결과 : " + sum;
     }
 
     private boolean isEmpty(String input) {
         return input == null || input.trim().isEmpty();
+    }
+
+    private boolean isSingleNumber(String input, String delimiter) {
+        String[] numbers = input.split(delimiter);
+        if(numbers.length != 1) {
+            return false;
+        }
+        return !numbers[0].trim().isEmpty();
     }
 
     public long parsePositiveInteger(String input) {
