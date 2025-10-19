@@ -14,8 +14,8 @@ public class StringValidator {
             numbersString = extractStringNumbers(input);
         }
 
-        long positiveInteger = parsePositiveInteger(input);
-        return "결과 : " + positiveInteger;
+        long sum = calculateSum(numbersString, delimiter);
+        return "결과 : " + sum;
     }
 
     private boolean isEmpty(String input) {
@@ -63,5 +63,16 @@ public class StringValidator {
             numbersStart += 1;
         }
         return input.substring(numbersStart);
+    }
+
+    private long calculateSum(String input, String delimiter) {
+        String[] numbers = input.split(delimiter);
+        long sum = 0;
+        for (String number : numbers) {
+            if (!number.trim().isEmpty()) {
+                sum += parsePositiveInteger(number.trim());
+            }
+        }
+        return sum;
     }
 }
