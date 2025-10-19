@@ -12,27 +12,34 @@ public class StringValidator {
 
         String delimiter = DEFAULT_DELIMITER;
         String numbersString = input;
+        boolean isCustom = false;
 
         if (isCustomDelimiter(input)) {
             delimiter = extractCustomDelimiter(input);
             numbersString = extractor.extractStringNumbers(input);
+            isCustom = true;
         }
 
-        if (isSingleNumber(numbersString, delimiter)) {
+        if (isSingleNumber(numbersString, delimiter, isCustom)) {
             long number = parsePositiveInteger(numbersString.trim());
             return "결과 : " + number;
         }
 
-        long sum = calculator.calculateSum(numbersString, delimiter, this);
+        long sum = calculator.calculateSum(numbersString, delimiter, isCustom, this);
         return "결과 : " + sum;
     }
 
     private boolean isEmpty(String input) {
-        return input == null || input.trim().isEmpty();
+        return input == null || input.trim().isEmpty(); //공백도 확인하기 위해 trim 사용
     }
 
-    private boolean isSingleNumber(String input, String delimiter) {
-        String[] numbers = input.split(delimiter);
+    private boolean isSingleNumber(String input, String delimiter, boolean isCustom) {
+        String[] numbers;
+        if (isCustom) {
+            numbers = input.split(java.util.regex.Pattern.quote(delimiter)); //특수 문자를 일반 문자로 처리하도록 Pattern.quote 사용
+        } else {
+            numbers = input.split(delimiter);
+        }
         if(numbers.length != 1) {
             return false;
         }
