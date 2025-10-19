@@ -7,9 +7,11 @@ public class StringValidator {
         }
 
         String delimiter = DEFAULT_DELIMITER;
+        String numbersString = input;
 
         if (isCustomDelimiter(input)) {
             delimiter = extractCustomDelimiter(input);
+            numbersString = extractStringNumbers(input);
         }
 
         long positiveInteger = parsePositiveInteger(input);
@@ -49,4 +51,17 @@ public class StringValidator {
         return input.substring(2, delimiterEnd);
     }
 
+    private String extractStringNumbers(String input) {
+        int numbersStart = input.indexOf("\n");
+        if (numbersStart == -1) {
+            numbersStart = input.indexOf("\\n");
+            if (numbersStart == -1) {
+                throw new IllegalArgumentException();
+            }
+            numbersStart += 2;
+        } else  {
+            numbersStart += 1;
+        }
+        return input.substring(numbersStart);
+    }
 }
