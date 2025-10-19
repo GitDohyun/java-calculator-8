@@ -1,6 +1,10 @@
 package calculator;
 
 public class StringValidator {
+    private static final String DEFAULT_DELIMITER = ",|:";
+    private final StringExtractor extractor = new StringExtractor();
+    private final SumCalculator calculator = new SumCalculator();
+
     public String validate(String input) {
         if (isEmpty(input)) {
             return "결과 : 0";
@@ -11,18 +15,18 @@ public class StringValidator {
 
         if (isCustomDelimiter(input)) {
             delimiter = extractCustomDelimiter(input);
-            numbersString = extractStringNumbers(input);
+            numbersString = extractor.extractStringNumbers(input);
         }
 
-        long sum = calculateSum(numbersString, delimiter);
+        long sum = calculator.calculateSum(numbersString, delimiter, this);
         return "결과 : " + sum;
     }
 
     private boolean isEmpty(String input) {
-        return input == null || input.trim().isEmpty(); //공백도 확인하기 위해 trim 사용
+        return input == null || input.trim().isEmpty();
     }
 
-    private long parsePositiveInteger(String input) {
+    public long parsePositiveInteger(String input) {
         try {
             long positiveInteger = Long.parseLong(input);
             if (positiveInteger < 0) {
@@ -33,8 +37,6 @@ public class StringValidator {
             throw new IllegalArgumentException();
         }
     }
-
-    private static final String DEFAULT_DELIMITER = ",|:";
 
     private boolean isCustomDelimiter(String input) {
         return input.startsWith("//");
@@ -49,30 +51,5 @@ public class StringValidator {
             }
         }
         return input.substring(2, delimiterEnd);
-    }
-
-    private String extractStringNumbers(String input) {
-        int numbersStart = input.indexOf("\n");
-        if (numbersStart == -1) {
-            numbersStart = input.indexOf("\\n");
-            if (numbersStart == -1) {
-                throw new IllegalArgumentException();
-            }
-            numbersStart += 2;
-        } else  {
-            numbersStart += 1;
-        }
-        return input.substring(numbersStart);
-    }
-
-    private long calculateSum(String input, String delimiter) {
-        String[] numbers = input.split(delimiter);
-        long sum = 0;
-        for (String number : numbers) {
-            if (!number.trim().isEmpty()) {
-                sum += parsePositiveInteger(number.trim());
-            }
-        }
-        return sum;
     }
 }
