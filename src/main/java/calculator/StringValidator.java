@@ -6,6 +6,12 @@ public class StringValidator {
             return "결과 : 0";
         }
 
+        String delimiter = DEFAULT_DELIMITER;
+
+        if (isCustomDelimiter(input)) {
+            delimiter = extractCustomDelimiter(input);
+        }
+
         long positiveInteger = parsePositiveInteger(input);
         return "결과 : " + positiveInteger;
     }
@@ -25,4 +31,22 @@ public class StringValidator {
             throw new IllegalArgumentException();
         }
     }
+
+    private static final String DEFAULT_DELIMITER = ",|:";
+
+    private boolean isCustomDelimiter(String input) {
+        return input.startsWith("//");
+    }
+
+    private String extractCustomDelimiter(String input) {
+        int delimiterEnd = input.indexOf("\n");
+        if (delimiterEnd == -1) {
+            delimiterEnd = input.indexOf("\\n");
+            if (delimiterEnd == -1) {
+                throw new IllegalArgumentException();
+            }
+        }
+        return input.substring(2, delimiterEnd);
+    }
+
 }
